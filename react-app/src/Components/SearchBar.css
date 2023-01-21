@@ -1,3 +1,15 @@
+img {
+  height: fit-content;
+  width: fit-content;
+  margin: auto;
+}
+
+p {
+  height: fit-content;
+  width: fit-content;
+  margin: auto;
+}
+
 .searchInputs {
   margin-top: 105px;
   display: flex;
@@ -27,7 +39,7 @@ input:focus {
   outline: none;
 }
 .searchIcon svg {
-  font-size: 35px;
+  font-size: 45px;
 }
 
 .dataResult {

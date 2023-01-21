@@ -1,57 +1,69 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import "./SearchBar.css";
-import SearchIcon from "@material-ui/icons/Search";
-import CloseIcon from "@material-ui/icons/Close";
+import axios from 'axios';
 
-function SearchBar({ placeholder, data }) {
-  const [filteredData, setFilteredData] = useState([]);
-  const [wordEntered, setWordEntered] = useState("");
+// function SearchBar() {
+//   const [query, setQuery] = useState('');
+//   const [result, setResult] = useState(null);
 
-  const handleFilter = (event) => {
-    const searchWord = event.target.value;
-    setWordEntered(searchWord);
-    const newFilter = data.filter((value) => {
-      return value.title.toLowerCase().includes(searchWord.toLowerCase());
-    });
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     try {
+//       const res = await axios.get(`https://www.amiiboapi.com/api/amiibo/?name=${query}`);
+//       setResult(res.data);
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   };
 
-    if (searchWord === "") {
-      setFilteredData([]);
-    } else {
-      setFilteredData(newFilter);
+//   return (
+//     <div>
+//       <form onSubmit={handleSubmit}>
+//         <input type="text" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search for an amiibo character" />
+//         <button type="submit">Search</button>
+//       </form>
+//       {result && (
+//         <div>
+//           <h2>{result.amiibo[0].name}</h2>
+//           <img src={result.amiibo[0].image} alt={result.amiibo[0].name} />
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
+
+// export default SearchBar;
+
+function SearchBar() {
+  const [query, setQuery] = useState('');
+  const [result, setResult] = useState(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.get(`https://www.amiiboapi.com/api/amiibo/?name=${query}`);
+      setResult(res.data);
+    } catch (err) {
+      console.error(err);
     }
-  };
-
-  const clearInput = () => {
-    setFilteredData([]);
-    setWordEntered("");
   };
 
   return (
     <div className="search">
-      <div className="searchInputs">
-        <input
-          type="text"
-          placeholder={placeholder}
-          value={wordEntered}
-          onChange={handleFilter}
-        />
-        <div className="searchIcon">
-          {filteredData.length === 0 ? (
-            <SearchIcon />
-          ) : (
-            <CloseIcon id="clearBtn" onClick={clearInput} />
-          )}
-        </div>
-      </div>
-      {filteredData.length !== 0 && (
-        <div className="dataResult">
-          {filteredData.slice(0, 15).map((value, key) => {
-            return (
-              <a className="dataItem" href={value.link} target="_blank" rel="noreferrer">
-                <p>{value.title} </p>
-              </a>
-            );
-          })}
+      <form className="searchInputs" onSubmit={handleSubmit}>
+        <input type="text" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search for Amiibo Character..." />
+        <button type="submit">Search</button>
+      </form>
+      {result && (
+        <div>
+          <p>{result.amiibo.length} characters match your search for "{query}"</p>
+          {result.amiibo.map(amiibo => (
+            <div key={amiibo.tail}>
+              <h2>{amiibo.name}</h2>
+              <h3>{amiibo.amiiboSeries}</h3>
+              <img src={amiibo.image} alt={amiibo.name} />
+            </div>
+          ))}
         </div>
       )}
     </div>
